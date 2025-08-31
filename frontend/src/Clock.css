@@ -1,6 +1,7 @@
-h1 {
-  font-size: 5em;
+.time {
+  font-size: 9em;
   font-variant-numeric: tabular-nums;
   font-family: Fredericka the Great, system-ui, Avenir, Helvetica, Arial,
     sans-serif;
+  margin: 0;
 }

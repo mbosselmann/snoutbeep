@@ -1,30 +1,17 @@
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-
 import Clock from "./Clock";
 import LetterGlitch from "./LetterGlitch";
+import Pig from "./Pig";
 
 import "./App.css";
 
-function App() {
+type options = "clock" | "letterGlitch" | "pig";
+
+function App({ option = "pig" }: { option?: options }) {
   return (
-    <>
-      <div>
-        <Clock />
-      </div>
-      <div>
-        <DotLottieReact
-          src="https://lottie.host/850857d4-5bad-4e15-8412-25b7a20aed81/01sG1gKWau.lottie"
-          loop
-          autoplay
-        />
-      </div>
-      <div
-        style={{
-          width: "900px",
-          height: "700px",
-          position: "relative",
-        }}
-      >
+    <main className={option}>
+      {option === "clock" && <Clock />}
+      {option === "pig" && <Pig />}
+      {option === "letterGlitch" && (
         <LetterGlitch
           glitchSpeed={50}
           centerVignette={false}
@@ -32,8 +19,8 @@ function App() {
           smooth={true}
           glitchColors={["#c28c95", "#ffd1da", "#3d93cf"]}
         />
-      </div>
-    </>
+      )}
+    </main>
   );
 }
 
