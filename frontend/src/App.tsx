@@ -3,13 +3,36 @@ import LetterGlitch from "./LetterGlitch";
 import Pig from "./Pig";
 
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
+import Menu from "./Menu";
 
-type options = "clock" | "letterGlitch" | "pig" | null;
+export type options = "clock" | "letterGlitch" | "pig" | "pomodoro";
 
 function App() {
-  const [option, setOption] = useState<options>(null);
+  const [option, setOption] = useState<options | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const menuRef = useRef<HTMLButtonElement>(null);
+  console.log("App rendered with option:", option);
+
+  const handleOptionChange = (newOption: options) => {
+    setOption(newOption);
+    setIsMenuVisible(false);
+  };
+
+  const handleTouch = useEffectEvent(() => {
+    if (menuRef.current) {
+      return;
+    }
+    setIsMenuVisible((value) => !value);
+  });
+
+  useEffect(() => {
+    window.addEventListener("touchstart", handleTouch);
+    return () => {
+      window.removeEventListener("touchstart", handleTouch);
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchOption() {
@@ -49,6 +72,13 @@ function App() {
 
   return (
     <main className={option}>
+      {isMenuVisible && (
+        <Menu
+          ref={menuRef}
+          selectedOption={option}
+          onOptionSelect={handleOptionChange}
+        />
+      )}
       {option === "clock" && <Clock />}
       {option === "pig" && <Pig />}
       {option === "letterGlitch" && (

@@ -3,6 +3,8 @@ main {
   height: 100svh;
   display: grid;
   place-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .pig {
