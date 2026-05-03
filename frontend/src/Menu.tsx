@@ -1,7 +1,20 @@
-import { useState } from "react";
-import type { options } from "./App";
 import "./Menu.css";
-import froggy from "./assets/froggy.png";
+import type { options } from "./App";
+import { ClockIcon, GlitchIcon, PigIcon, FrogIcon } from "./Icons";
+
+const options: { id: options; label: string }[] = [
+  { id: "clock", label: "Clock" },
+  { id: "letterGlitch", label: "Letter Glitch" },
+  { id: "pig", label: "Pig" },
+  { id: "pomodoro", label: "Pomofroggo" },
+];
+
+const iconMap: Record<options, React.FC<{ className?: string }>> = {
+  clock: ClockIcon,
+  letterGlitch: GlitchIcon,
+  pig: PigIcon,
+  pomodoro: FrogIcon,
+};
 
 function Menu({
   selectedOption,
@@ -11,55 +24,35 @@ function Menu({
   selectedOption: string | null;
   onOptionSelect: (option: options) => void;
   ref: React.Ref<HTMLButtonElement>;
+  isMenuVisible: boolean;
 }) {
-  const [isMenuToggled, setIsMenuToggled] = useState(false);
-
   return (
-    <section className="menu" ref={ref}>
-      <button
-        className={"menu-toggle" + (isMenuToggled ? " fadeOut" : " fadeIn")}
-        type="button"
-        onClick={() => setIsMenuToggled(!isMenuToggled)}
-      >
-        <img width="50" height="50" src={froggy} alt="Open Menu" />
-      </button>
-      {isMenuToggled && (
-        <section className="options-menu">
-          <button
-            className={`button ${selectedOption === "clock" ? "selected" : ""}`}
-            type="button"
-            onClick={() => onOptionSelect("clock")}
-          >
-            Clock
-          </button>
-          <button
-            className={`button ${
-              selectedOption === "letterGlitch" ? "selected" : ""
-            }`}
-            type="button"
-            onClick={() => onOptionSelect("letterGlitch")}
-          >
-            Letter Glitch
-          </button>
-          <button
-            className={`button ${selectedOption === "pig" ? "selected" : ""}`}
-            type="button"
-            onClick={() => onOptionSelect("pig")}
-          >
-            Pig
-          </button>
-          <button
-            className={`button ${
-              selectedOption === "pomodoro" ? "selected" : ""
-            }`}
-            type="button"
-            onClick={() => onOptionSelect("pomodoro")}
-          >
-            Pomodoro
-          </button>
-        </section>
-      )}
-    </section>
+    <main ref={ref} className={`main main--${selectedOption}`}>
+      <div className="content">
+        <ul className="card-grid">
+          {options.map((option) => {
+            const Icon = iconMap[option.id];
+            const isSelected = selectedOption === option.id;
+
+            return (
+              <li key={option.id}>
+                <button
+                  className={`glass-card ${isSelected ? `glass-card--${option.id}` : ""}`}
+                  type="button"
+                  onClick={() => onOptionSelect(option.id)}
+                  aria-pressed={isSelected}
+                >
+                  <div className="card-icon">
+                    <Icon className="icon" />
+                  </div>
+                  <span className="card-label">{option.label}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </main>
   );
 }
 

@@ -1,16 +1,21 @@
+import "./App.css";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type TouchEvent as ReactTouchEvent,
+} from "react";
+import Menu from "./Menu";
+import Pig from "./Pig";
 import Clock from "./Clock";
 import LetterGlitch from "./LetterGlitch";
-import Pig from "./Pig";
-
-import "./App.css";
-import { useEffect, useEffectEvent, useRef, useState } from "react";
-import Menu from "./Menu";
+import SplashScreen from "./SplashScreen";
 
 export type options = "clock" | "letterGlitch" | "pig" | "pomodoro";
 
 function App() {
-  const [option, setOption] = useState<options | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [option, setOption] = useState<options>("pig");
+  const [showSplashScreen, setShowSplashScreen] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const menuRef = useRef<HTMLButtonElement>(null);
   console.log("App rendered with option:", option);
@@ -20,23 +25,19 @@ function App() {
     setIsMenuVisible(false);
   };
 
-  const handleTouch = useEffectEvent(() => {
+  const handleTouch = (event: ReactTouchEvent<HTMLElement>) => {
     if (menuRef.current) {
+      console.log("menuRef.current", menuRef.current);
       return;
     }
-    setIsMenuVisible((value) => !value);
-  });
-
-  useEffect(() => {
-    window.addEventListener("touchstart", handleTouch);
-    return () => {
-      window.removeEventListener("touchstart", handleTouch);
-    };
-  }, []);
+    event.preventDefault();
+    setShowSplashScreen(true);
+    setIsMenuVisible(true);
+  };
 
   useEffect(() => {
     async function fetchOption() {
-      setOption(null);
+      // setOption(null);
       try {
         const response = await fetch("/api/option");
         if (!response.ok) {
@@ -45,13 +46,16 @@ function App() {
         const data = await response.json();
         const fetchedOption = data as options;
         if (!ignore) {
+          console.log("fetchedOption", fetchedOption);
           setOption(fetchedOption);
         }
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message);
+          setOption("letterGlitch");
+          console.log("Error :(", err.message);
         } else {
-          setError("An unknown error occurred");
+          setOption("letterGlitch");
+          console.log("Error :(", "An unknown error occurred");
         }
       }
     }
@@ -62,25 +66,25 @@ function App() {
     };
   }, []);
 
-  if (error) {
-    return <div className="error">Error: {error}</div>;
-  }
-
-  if (!option) {
-    return <div className="loading">Loading...</div>;
+  if (showSplashScreen) {
+    return (
+      <SplashScreen onLoadingComplete={() => setShowSplashScreen(false)} />
+    );
   }
 
   return (
-    <main className={option}>
+    <main className={option} onTouchStart={handleTouch}>
       {isMenuVisible && (
         <Menu
           ref={menuRef}
           selectedOption={option}
           onOptionSelect={handleOptionChange}
+          isMenuVisible={isMenuVisible}
         />
       )}
       {option === "clock" && <Clock />}
       {option === "pig" && <Pig />}
+      {option === "pomodoro" && <Pig />}
       {option === "letterGlitch" && (
         <LetterGlitch
           glitchSpeed={50}
