@@ -1,0 +1,14 @@
+.letterGlitch {
+  width: 100%;
+}
+
+.letterGlitch > div {
+  width: 100%;
+  height: 100% !important;
+  max-width: 100% !important;
+}
+
+.letterGlitch > div > canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

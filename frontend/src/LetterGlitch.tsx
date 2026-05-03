@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import "./LetterGlitch.css";
 
 const LetterGlitch = ({
   glitchColors = ["#2b4539", "#61dca3", "#61b3dc"],
@@ -121,7 +122,7 @@ const LetterGlitch = ({
   const interpolateColor = (
     start: { r: number; g: number; b: number },
     end: { r: number; g: number; b: number },
-    factor: number
+    factor: number,
   ) => {
     const result = {
       r: Math.round(start.r + (end.r - start.r) * factor),
@@ -222,7 +223,7 @@ const LetterGlitch = ({
           letter.color = interpolateColor(
             startRgb,
             endRgb,
-            letter.colorProgress
+            letter.colorProgress,
           );
           needsRedraw = true;
         }
@@ -314,15 +315,17 @@ const LetterGlitch = ({
   };
 
   return (
-    <div style={containerStyle as React.CSSProperties}>
-      <canvas ref={canvasRef} style={canvasStyle} />
-      {outerVignette && (
-        <div style={outerVignetteStyle as React.CSSProperties}></div>
-      )}
-      {centerVignette && (
-        <div style={centerVignetteStyle as React.CSSProperties}></div>
-      )}
-    </div>
+    <section className="letterGlitch">
+      <div style={containerStyle as React.CSSProperties}>
+        <canvas ref={canvasRef} style={canvasStyle} />
+        {outerVignette && (
+          <div style={outerVignetteStyle as React.CSSProperties}></div>
+        )}
+        {centerVignette && (
+          <div style={centerVignetteStyle as React.CSSProperties}></div>
+        )}
+      </div>
+    </section>
   );
 };
 

@@ -10,6 +10,7 @@ import Pig from "./Pig";
 import Clock from "./Clock";
 import LetterGlitch from "./LetterGlitch";
 import SplashScreen from "./SplashScreen";
+import Pomofroggo from "./Pomofroggo";
 
 export type options = "clock" | "letterGlitch" | "pig" | "pomodoro";
 
@@ -73,7 +74,7 @@ function App() {
   }
 
   return (
-    <main className={option} onTouchStart={handleTouch}>
+    <main onTouchStart={handleTouch}>
       {isMenuVisible && (
         <Menu
           ref={menuRef}
@@ -84,7 +85,9 @@ function App() {
       )}
       {option === "clock" && <Clock />}
       {option === "pig" && <Pig />}
-      {option === "pomodoro" && <Pig />}
+      {option === "pomodoro" && (
+        <Pomofroggo onReturn={() => setIsMenuVisible(true)} />
+      )}
       {option === "letterGlitch" && (
         <LetterGlitch
           glitchSpeed={50}

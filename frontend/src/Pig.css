@@ -1,0 +1,11 @@
+.pig {
+  width: 100%;
+  background-color: #3e93d0;
+}
+
+.pig > div {
+  margin: 0 auto;
+  height: 100svh !important;
+  width: fit-content !important;
+  max-width: 500px !important;
+}
